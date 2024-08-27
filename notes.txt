@@ -1,0 +1,3 @@
+pip install pytesseract pillow pdf2image
+
+https://github.com/UB-Mannheim/tesseract/wiki
