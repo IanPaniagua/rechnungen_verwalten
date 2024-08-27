@@ -1,19 +1,24 @@
-#TODO: Rechung nummer for Rechnung_60308347... 27 still wrong
-
 import pdfplumber
 import re
 import os
 
 def extract_text_from_pdf(pdf_file_path):
     text = ''
+    # Check if the file exists before attempting to open
+    if not os.path.isfile(pdf_file_path):
+        print(f"File does not exist: {pdf_file_path}")
+        return text
     
     # Try to extract text from the PDF using pdfplumber
-    with pdfplumber.open(pdf_file_path) as pdf:
-        for page in pdf.pages:
-            # Extract text from the page
-            page_text = page.extract_text()
-            if page_text:
-                text += page_text
+    try:
+        with pdfplumber.open(pdf_file_path) as pdf:
+            for page in pdf.pages:
+                # Extract text from the page
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text
+    except Exception as e:
+        print(f"Error reading {pdf_file_path}: {e}")
     
     return text
 
@@ -81,7 +86,14 @@ def display_invoices(invoices, filename_width=20):
         print(f"{filename:<{filename_width}} {invoice_number:<25}")
 
 if __name__ == "__main__":
-    folder_path = 're_'  # Specify the folder containing the PDFs
+    # Update this to the full path where your PDFs are stored
+    folder_path = r'C:\Users\Teilnehmer\OneDrive - BBQ - Baumann Bildung und Qualifizierung GmbH\Dokumente\GitHub\rechnungen_verwalten\re_'  
+    
+    # Check if the folder path exists
+    if not os.path.exists(folder_path):
+        print(f"Folder path '{folder_path}' does not exist.")
+        exit()
+    
     invoices = extract_invoices_from_folder(folder_path)
 
     # Display the results
